@@ -38,7 +38,7 @@ namespace Microsoft.EntityFrameworkCore.Specification.Tests
             AssertQuery<Customer>(cs =>
                 cs.Single(c => c.CustomerID == (string)context.Arguments["customerId"]));
         }
-        
+
         [ConditionalFact]
         public void Query_composition_against_ienumerable_set()
         {
@@ -3030,6 +3030,24 @@ namespace Microsoft.EntityFrameworkCore.Specification.Tests
             AssertQuery<Customer>(
                 cs => cs.OrderBy(c => c.CustomerID),
                 cs => cs.OrderBy(c => c.CustomerID, StringComparer.Ordinal),
+                assertOrder: true,
+                entryCount: 91);
+        }
+
+        //[ConditionalFact] TODO: See issue#6145
+        public virtual void OrderBy_true()
+        {
+            AssertQuery<Customer>(
+                cs => cs.OrderBy(c => true),
+                assertOrder: true,
+                entryCount: 91);
+        }
+
+        //[ConditionalFact] TODO: See issue#6145
+        public virtual void OrderBy_integer()
+        {
+            AssertQuery<Customer>(
+                cs => cs.OrderBy(c => 3),
                 assertOrder: true,
                 entryCount: 91);
         }
