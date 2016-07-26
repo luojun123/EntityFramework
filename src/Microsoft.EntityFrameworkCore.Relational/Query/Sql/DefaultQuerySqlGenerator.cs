@@ -1632,21 +1632,27 @@ namespace Microsoft.EntityFrameworkCore.Query.Sql
                 }
                 else
                 {
+                    Expression newLeft;
+                    Expression newRight;
                     if (expression.IsLogicalOperation())
                     {
                         var parentIsSearchCondition = _isSearchCondition;
                         _isSearchCondition = true;
-                        var left = Visit(expression.Left);
-                        var right = Visit(expression.Right);
+                        newLeft = Visit(expression.Left);
+                        newRight = Visit(expression.Right);
                         _isSearchCondition = parentIsSearchCondition;
-
-                        return Expression.MakeBinary(expression.NodeType, left, right);
+                    }
+                    else
+                    {
+                        newLeft = Visit(expression.Left);
+                        newRight = Visit(expression.Right);
                     }
 
-                    if (IsSearchCondition(expression))
+                    var newExpression = expression.Update(newLeft, expression.Conversion, newRight);
+                    if (IsSearchCondition(newExpression))
                     {
                         return Expression.Condition(
-                            expression,
+                            newExpression,
                             Expression.Constant(true, typeof(bool)),
                             Expression.Constant(false, typeof(bool)));
                     }

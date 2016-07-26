@@ -55,6 +55,6 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionTranslators
         /// </summary>
         /// <param name="translators"> The translators. </param>
         protected virtual void AddTranslators([NotNull] IEnumerable<IMethodCallTranslator> translators)
-            => _methodCallTranslators.AddRange(translators);
+            => _methodCallTranslators.InsertRange(0, translators);
     }
 }

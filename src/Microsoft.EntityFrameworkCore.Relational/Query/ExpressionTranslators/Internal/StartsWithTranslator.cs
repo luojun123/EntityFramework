@@ -30,6 +30,7 @@ namespace Microsoft.EntityFrameworkCore.Query.ExpressionTranslators.Internal
 
             return ReferenceEquals(methodCallExpression.Method, _methodInfo)
                 ? new LikeExpression(
+                    // ReSharper disable once AssignNullToNotNullAttribute
                     methodCallExpression.Object,
                     Expression.Add(methodCallExpression.Arguments[0], Expression.Constant("%", typeof(string)), _concat))
                 : null;
